@@ -1,0 +1,50 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:6.1.0'
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'application'
+}
+group = 'sk.ktk'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven { url "https://kotlin.bintray.com/kotlinx" }
+}
+
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
+    // https://mvnrepository.com/artifact/com.fazecast/jSerialComm
+    compile group: 'com.fazecast', name: 'jSerialComm', version: '2.6.2'
+// https://mvnrepository.com/artifact/com.github.ajalt.clikt/clikt-jvm
+    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.3")
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+apply plugin: 'java'
+
+jar {
+    manifest {
+        attributes "Main-Class": "sk.ktk.MainKt"
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = '1.8'
+}
+application {
+    mainClassName = 'sk.ktk.MainKt'
+}
